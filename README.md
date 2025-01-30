@@ -8,7 +8,7 @@ This is a small program that connects to an Ollama instance to turn a natural la
 
 **Do not, under any circumstance, allow any LLM to execute arbitrary commands on your system.**
 
-If you are not willing or not able to supervise the LLM backing this program, do not download or run this program. If the model goes rogue and decides that only thing to do is `rm -rf /`, I will not be to blame.
+If you are not willing or not able to supervise the LLM backing this program, do not download or run this program. If the model goes rogue and decides that the only thing left to do is `rm -rf /`, I will not be to blame.
 
 All that being said, there are a number of safety measures in place:
 
@@ -16,6 +16,16 @@ All that being said, there are a number of safety measures in place:
 * The program ships with a preset whitelist of "commands that I'm pretty sure are safe to run"
 * The program makes an effort to find "hidden" commands - pipes, `sudo`, output redirection
 * Every command is presented to the user for approval before being executed, with the option to exit immediately
+
+### Config
+
+To get the program set up, open `ask.py` and scroll to line 20:
+
+```py
+ol = Ollama(model = "codestral", ip = "localhost", port = 11434)
+```
+
+If you are using a different model, or are not running the LLM locally, modify these values. Keep in mind that this program was built around Codestral, and other models (particularly general-purpose ones) may not perform as well.
 
 ### Usage
 

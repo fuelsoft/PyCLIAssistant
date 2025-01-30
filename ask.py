@@ -15,6 +15,10 @@ from PyLLMAdapter.Ollama import Ollama
 REQ_CONFIRM = True
 DEBUG = False
 
+# If you are not running locally, change these values
+# Codestral is the model I've tested against and what the prompts below are tuned for
+ol = Ollama(model = "codestral", ip = "localhost", port = 11434)
+
 # TODO: We can get these at runtime, right? ...right?
 PLATFORM = "Linux"
 SHELL = "bash"
@@ -62,9 +66,6 @@ Explain the following command(s):
 Explain what all parameters and flags do, if any are specified.
 If this could result in any side-effects, make note of them.
 """
-
-# Codestral is the model I've tested against, and I've found this to be quite reliable
-ol = Ollama("codestral")
 
 # usage: ask.py <question>
 def main():
