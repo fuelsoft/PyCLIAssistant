@@ -1,0 +1,3 @@
+[submodule "PyLLMAdapter.git"]
+	path = PyLLMAdapter
+	url = https://github.com/fuelsoft/PyLLMAdapter.git
