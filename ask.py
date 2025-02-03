@@ -2,13 +2,15 @@
 
 # LLM-based command line assistant
 
-import json
+import os
 import re
-import subprocess
-import shutil
 import sys
-from datetime import datetime
+import json
+import shutil
+import platform
+import subprocess
 from enum import Enum
+from datetime import datetime
 
 from PyLLMAdapter.Ollama import Ollama
 
@@ -19,13 +21,32 @@ DEBUG = False
 # Codestral is the model I've tested against and what the prompts below are tuned for
 ol = Ollama(model = "codestral", ip = "localhost", port = 11434)
 
-# TODO: We can get these at runtime, right? ...right?
-PLATFORM = "Linux"
-SHELL = "bash"
+def get_platform_data(default_shell = "bash"):
+	kernel_to_platform = {
+		"darwin": "macos"
+	}
+
+	p = platform.system().lower()
+	s = default_shell
+
+	if p in ['linux', 'darwin']:
+		s = os.environ.get('SHELL', s).split('/')[-1]
+
+	elif p == 'windows':
+		s = os.environ.get('COMSPEC', s).split('\\')[-1].split('.')[0]
+
+	if p in kernel_to_platform:
+		p = kernel_to_platform[p]
+
+	return [p, s]
+
+pdata = get_platform_data()
+PLATFORM = pdata[0]
+SHELL = pdata[1]
 
 sys_prompt = """
 You are assisting a user sitting at a command line.
-This system is {shell} on {platform}.
+This shell is {shell} on {platform}.
 The current date and time is {datetime}.
 The user asks for assistance with the following: "{prompt}".
 You must format your reply as JSON.
@@ -195,6 +216,7 @@ class Command(object):
 		"df",        # Filesystem disk space information
 		"du",        # File size information
 		"lscpu",     # CPU info
+		"sw_vers",   # Prints macOS version information
 
 		# File and Text Processing
 		"grep",      # Search text using patterns
