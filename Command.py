@@ -99,12 +99,17 @@ class Command(object):
 		return [True, ""]
 
 	def run(self):
-		result = subprocess.Popen(self.command, shell = True, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
-		stdout = result.stdout.read()
-		stderr = result.stderr.read()
+		result = subprocess.Popen(
+			self.command,
+			shell = True,
+			text=True,
+			stdout = subprocess.PIPE,
+			stderr = subprocess.PIPE
+		)
+
 		return [
-			stdout.decode("utf-8"),
-			stderr.decode("utf-8")
+			result.stdout.read(),
+			result.stderr.read()
 		]
 
 	def __str__(self):

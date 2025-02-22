@@ -32,9 +32,7 @@ class Colour(Enum):
 	RESET = '0'
 
 # usage: ask.py <question>
-def main():
-	prompt = sys.argv[1]
-
+def ask(prompt):
 	current_time = datetime.now()
 	formatted_time = current_time.strftime("%Y/%m/%d %H:%M:%S")
 	message = Prompts.ask_prompt.format(shell = SHELL, platform = PLATFORM, datetime = formatted_time, prompt = prompt)
@@ -59,7 +57,12 @@ def main():
 		output = handle_reply(reply)
 
 def handle_reply(reply):
-	action = json.loads(reply.message)
+	try:
+		action = json.loads(reply.message)
+	except Exception as e:
+		print("Failed to parse reply JSON!")
+		print(reply.message)
+		raise
 
 	if "run" in action:
 		try:
@@ -78,7 +81,7 @@ def handle_reply(reply):
 					user_input = input(get_prompt(command, is_whitelisted)).lower()
 				except KeyboardInterrupt as e:
 					print(colourize("\nCommand not executed. Exiting.", Colour.RED))
-					sys.exit(0)
+					return
 
 				if user_input == "?":
 					print(colourize("Explaining...", Colour.CYAN))
@@ -155,4 +158,4 @@ PLATFORM = pdata[0]
 SHELL = pdata[1]
 
 if __name__ == '__main__':
-	main()
+	ask(sys.argv[1])
