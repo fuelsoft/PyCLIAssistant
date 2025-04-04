@@ -58,7 +58,7 @@ def ask(prompt):
 
 def handle_reply(reply):
 	try:
-		action = json.loads(reply.message)
+		action = reply.json()
 	except Exception as e:
 		print("Failed to parse reply JSON!")
 		print(reply.message)
